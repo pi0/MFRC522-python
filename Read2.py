@@ -18,7 +18,7 @@ def end_read(signal, frame):
 signal.signal(signal.SIGINT, end_read)
 
 # Create an object of the class MFRC522
-MIFAREReader = MFRC522.MFRC522()
+rfid = MFRC522.MFRC522()
 
 # Welcome message
 print "Welcome to the MFRC522 data read example"
@@ -28,34 +28,34 @@ print "Press Ctrl-C to stop."
 while continue_reading:
 
     # Scan for cards    
-    (status, TagType) = MIFAREReader.request(MIFAREReader.PICC_REQIDL)
+    (status, TagType) = rfid.request(rfid.PICC_REQIDL)
 
     # If a card is found
-    if status == MIFAREReader.MI_OK:
+    if status == rfid.MI_OK:
         print "Card detected"
 
     # Get the UID of the card
-    (status, uid) = MIFAREReader.anti_coll()
+    (status, uid) = rfid.anti_coll()
 
     # If we have the UID, continue
-    if status == MIFAREReader.MI_OK:
+    if status == rfid.MI_OK:
 
         # Print UID
         print "Card read UID: " + str(uid[0]) + "," + str(uid[1]) + "," + str(uid[2]) + "," + str(uid[3])
 
         # This is the default key for authentication
-        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00]
+        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
         # Select the scanned tag
-        MIFAREReader.select_tag(uid)
+        rfid.select_tag(uid)
 
         # Authenticate
-        status = MIFAREReader.auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
+        status = rfid.auth(rfid.PICC_AUTHENT1A, 8, key, uid)
 
         # Check if authenticated
-        if status == MIFAREReader.MI_OK:
-            MIFAREReader.dump_block(8)
-            MIFAREReader.stop_crypto1()
+        if status == rfid.MI_OK:
+            rfid.read_string(8)
+            rfid.stop_crypto1()
         else:
             print "Authentication error"
 

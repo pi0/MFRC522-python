@@ -24,14 +24,14 @@ MIFAREReader = MFRC522.MFRC522()
 while continue_reading:
     
     # Scan for cards    
-    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+    (status,TagType) = MIFAREReader.request(MIFAREReader.PICC_REQIDL)
 
     # If a card is found
     if status == MIFAREReader.MI_OK:
         print "Card detected"
     
     # Get the UID of the card
-    (status,uid) = MIFAREReader.MFRC522_Anticoll()
+    (status,uid) = MIFAREReader.anti_coll()
 
     # If we have the UID, continue
     if status == MIFAREReader.MI_OK:
@@ -43,10 +43,10 @@ while continue_reading:
         key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
         
         # Select the scanned tag
-        MIFAREReader.MFRC522_SelectTag(uid)
+        MIFAREReader.select_tag(uid)
 
         # Dump the data
-        MIFAREReader.MFRC522_DumpClassic1K(key, uid)
+        MIFAREReader.dump_classic_1k(key, uid)
 
         # Stop
-        MIFAREReader.MFRC522_StopCrypto1()
+        MIFAREReader.stop_crypto1()
